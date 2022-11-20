@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="user-list-implemantation-test-suite.xml" />
+	<munit:test name="user-list-implemantation-test-suite-user-list-implemantationFlowTest" doc:id="2aad9569-fb92-4592-9db0-59f8bcbea609" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="User List" doc:id="afce543b-da58-405d-b508-c80266c8cb61" processor="slack:get-userslist">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Users list" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="5429549e-98cd-4686-9304-211e660ed018" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Slack_Connector_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mocks/userlist.json')]" mediaType="application/json" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to user-list-implemantationFlow" doc:id="1c57d821-59bc-47f6-86fe-b99fd71610af" name="user-list-implemantationFlow"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="10fa4be3-2faa-436a-9d82-2f023eb98805" processor="ee:transform" atLeast="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Transform Message" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="a06a7199-de2e-477d-8042-7e5ddfb8d281" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

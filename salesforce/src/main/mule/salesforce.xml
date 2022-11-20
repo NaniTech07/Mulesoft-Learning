@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="de2ba852-dda4-4e6a-9a29-4c97b60f4b3f" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="1ffd7565-15e9-46fe-b859-26682e012d7e" >
+		<salesforce:basic-connection username="vasireddylakshman@gmail.com" password="L@kshman0243" securityToken="60KAEps9y4ATA9fnwu8iGVpU" url="https://login.salesforce.com/services/Soap/u/53.0" />
+	</salesforce:sfdc-config>
+	<flow name="salesforceFlow" doc:id="df290076-59c7-456e-8511-e060fc3b1266" >
+		<http:listener doc:name="Listener" doc:id="95bd83a2-de4d-4241-9865-921679a8e6d2" config-ref="HTTP_Listener_config" path="/salesforce"/>
+		<ee:transform doc:name="Transform Message" doc:id="1e1c2ab4-fe3c-48c5-9944-51eeff6ebc52" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map(profile,index) -> {
+	Name: profile.name,
+	Status__c: profile.status
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="Create" doc:id="6c9134da-183c-49a7-b376-93838de12b0c" config-ref="Salesforce_Config" type="Nani__c"/>
+		<logger level="ERROR" doc:name="Logger" doc:id="59ec8fbf-8cde-45fd-86c3-9d8086378c8b" message="#[message.attributes]"/>
+	</flow>
+	<flow name="salesforceFlow2" doc:id="a43aaf19-5379-45b2-8f81-c86999929da9" >
+		<http:listener doc:name="Listener" doc:id="eb613e85-c3c1-49eb-a5e7-b6275744a8b2" config-ref="HTTP_Listener_config" path="/update"/>
+		<salesforce:update type="Nani__c" doc:name="Update" doc:id="94b23817-dcbb-40e9-9009-192d493904bd" config-ref="Salesforce_Config"/>
+	</flow>
+	<flow name="salesforceFlow1" doc:id="4ba155e9-22cf-4c07-a7af-e47d16e2c570" >
+		<http:listener doc:name="Listener" doc:id="ac43a2f3-c377-4638-8130-7d7f60f023f1" config-ref="HTTP_Listener_config" path="/delete"/>
+		<salesforce:query doc:name="Query" doc:id="5f789ae6-24d9-419d-8b5a-6777d1d60bca" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query >select Name,Id from Nani__c where Name=':name'</salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	name : attributes.queryParams.name
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message" doc:id="97f648c9-d205-45fb-9da0-ee8bf97ecfa5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map(object,objMap)->{
+	Name:object.Name,
+	Id:object.Id
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:delete doc:name="Delete" doc:id="84efc6b3-45bb-49a0-bac5-4ff8fb5ed16e" config-ref="Salesforce_Config">
+			<salesforce:ids ><![CDATA[#[payload.Id]]]></salesforce:ids>
+		</salesforce:delete>
+		<logger level="INFO" doc:name="Logger" doc:id="1a703740-dd29-4d69-b929-59fff59e2f9b" message="#[message.payload]"/>
+	</flow>
+</mule>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="post-message-implementation-test-suite.xml" />
+	<munit:test name="post-message-implementation-test-suite-post-message-implementationFlowTest" doc:id="31207cc8-642a-4124-bd81-652dadb3b79b" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Slack post message" doc:id="56a54d9e-6634-47c1-8568-3c2b1a75f166" processor="slack:create-chatpost-message">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Send Message" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2164bdff-a894-4952-af6a-ba6ffcff93f5" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Slack_Connector_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mocks/postmessage.json')]" mediaType="application/json" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="834f4b6a-6600-42b2-8339-f8351585248d" >
+				<munit:payload value="#[MunitTools::getResourceAsString('mocks/messagerequest.json')]" encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post-message-implementationFlow_SuccessCase" doc:id="f35b2274-7266-4624-935e-fcf7c99f6f4b" name="post-message-implementationFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="7fc07b6b-ddd9-4344-ba44-97328e55da81" processor="ee:transform" atLeast="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Transform Message" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="5e90473d-c336-4ac6-8a26-53a89656fcfb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="03b0d3bb-15b3-4cbf-a8e5-380df3053faf" actual="#[payload]" expected='#[{&#10;  "okay":true&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="mulesoft-slack-sapi-test-suite.xml" />
+	<munit:test name="mulesoft-slack-sapi-test-suite-mulesoft-slack-sapi-mainTest" doc:id="148cb955-6639-4d92-8b0b-5aaf6867865e" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Main Flow" doc:id="0917bb48-5e17-4132-8d99-67723bd38c63" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mulesoft-slack-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="603ac7dd-7e5a-4025-9abe-14513f9b588f" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="1176b6d1-fdfd-4094-bd47-639003c53e10" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="channel-list-implemantationFlow" attributeName="name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-call flow="channel-list-implemantationFlow" />
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to mulesoft-slack-sapi-main" doc:id="4d8bdad6-e735-4b1c-943d-24e3e887885d" name="mulesoft-slack-sapi-main"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:slack="http://www.mulesoft.org/schema/mule/slack"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="bd772c6d-64a8-4e78-bfdc-796e92be216d" >
+		<http:listener-connection host="0.0.0.0" port="8081" protocol="HTTPS">
+			<tls:context >
+				<tls:key-store type="jks" path="mule.jks" keyPassword="password" password="password" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<slack:config name="Slack_Connector_Config" doc:name="Slack Connector Config" doc:id="2af5fb7e-0173-4475-9fca-905bf577ddf8" >
+		<slack:slack-auth-connection >
+			<slack:oauth-authorization-code consumerKey="2915173380.4317875119409" consumerSecret="d18f00948f22d524e7382dbf72c09aa0" scopes="users:read chat:write channels:read"/>
+			<slack:oauth-callback-config listenerConfig="HTTP_Listener_config" callbackPath="/callback" authorizePath="/authorize" externalCallbackUrl="https://localhost:8081/callback" />
+		</slack:slack-auth-connection>
+	</slack:config>
+	<flow name="slackconnectorFlow" doc:id="981ac14d-d54d-4491-85e0-2992f960a364" >
+		<http:listener doc:name="Listener" doc:id="d3f72cec-5175-4381-aad7-bc988fa509d3" config-ref="HTTP_Listener_config" path="/post" allowedMethods="POST"/>
+		<slack:create-chatpost-message doc:name="Send Message" doc:id="93c2132b-0733-416e-af43-39b62777fedf" config-ref="Slack_Connector_Config" >
+			<slack:chatpost-message-content ><![CDATA[#[output application/json
+---
+{
+	channel: "D045XR2077F",
+	text: "Hi Team Please join the call in google meet"
+}]]]></slack:chatpost-message-content>
+		</slack:create-chatpost-message>
+	</flow>
+	<flow name="slackconnectorFlow1" doc:id="f1439d3e-f7cc-4934-a6ef-4deb22d60dbc" >
+		<http:listener doc:name="Listener" doc:id="9d6ee0c8-1a92-4dfd-912b-ff70485b8e74" config-ref="HTTP_Listener_config" path="/users"/>
+		<slack:get-userslist doc:name="Users list" doc:id="86198f40-eb9a-4c54-9971-750d57541a54" config-ref="Slack_Connector_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="0badf2a2-38ba-4cc7-b2d1-6d8f781fef57" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

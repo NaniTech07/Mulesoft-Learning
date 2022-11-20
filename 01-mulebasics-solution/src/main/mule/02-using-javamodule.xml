@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:java="http://www.mulesoft.org/schema/mule/java" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd">
+	<flow name="02-using-javamoduleFlow1" doc:id="400fa3cd-3320-46f7-84ee-df75ce819f3e" >
+		<http:listener doc:name="Listener" doc:id="566b11d5-489f-4809-85dd-d8f1730cbc19" config-ref="HTTP_Listener_config" path="/getprice"/>
+		<java:new constructor="StockQuoteService()" doc:name="New" doc:id="4e1ed627-739f-4480-9a9d-067f07441f30" class="com.way2learnonline.StockQuoteService" target="sqs"/>
+		<java:invoke method="getStockPrice(java.lang.String)" doc:name="Invoke" doc:id="7e02cc63-9e14-43e6-929e-2245281fc173" instance="#[vars.sqs]" class="com.way2learnonline.StockQuoteService">
+			<java:args ><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+	stockSymbol: attributes.queryParams.stock as String
+}]]]></java:args>
+		</java:invoke>
+	</flow>
+	<flow name="02-using-javamoduleFlow" doc:id="e21c3144-33a4-4ac6-8dc4-ae132c685be2" >
+		<http:listener doc:name="Listener" doc:id="7b9ca8a7-deda-4490-b819-aa9ead42bd32" config-ref="HTTP_Listener_config" path="/sayhello"/>
+		<java:invoke-static doc:name="Invoke static" doc:id="5b2c294d-7d26-4b63-b769-fb6f0512ac3d" class="com.way2learnonline.StockQuoteService" method="sayHello(java.lang.String,java.lang.String)">
+			<java:args ><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+	name: attributes.queryParams.name as String,
+	city: attributes.queryParams.city as String
+}]]]></java:args>
+		</java:invoke-static>
+	</flow>
+</mule>

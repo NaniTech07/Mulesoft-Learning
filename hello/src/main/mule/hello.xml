@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c46e2e13-b48c-4597-be32-c428fb9928e3" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="helloFlow" doc:id="0c7cc099-cdd1-48ca-8f3f-bad26ccba231" >
+		<http:listener doc:name="Listener" doc:id="49d2f2b9-83b6-4d2d-9773-34b7cc09c58c" config-ref="HTTP_Listener_config" path="/hello/{name}"/>
+		<set-variable value="#[attributes.uriParams.name]" doc:name="Set Variable" doc:id="d14c6edb-0d9b-421e-98e6-2e665e5b0154" variableName="name" />
+		<set-payload value="#[vars.name]" doc:name="Set Payload" doc:id="48aabce3-6706-4622-9d51-ce0b01319a4a" mimeType="text/plain"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ab529505-7a0b-4979-8e07-ce37dac4c2f1" message="#[message.payload]"/>
+	</flow>
+	<flow name="helloFlow1" doc:id="d72d3ec4-578a-49d1-a573-32fcb23fed15" >
+		<http:listener doc:name="Listener" doc:id="2cfac3a8-bfd9-440a-a325-df50c1aa8299" config-ref="HTTP_Listener_config" path="/get"/>
+		<set-variable value="Nani Vasireddy" doc:name="Set Variable" doc:id="4866982f-12e4-41dc-b6ad-499bba4fc1d1" variableName="String"/>
+		<java:invoke-static method='Naniii(java.lang.String)' doc:name="Invoke static" doc:id="693a0c52-2057-4e4f-8f4e-d8b7f007bb53" class="hello.Nani">
+			<java:args ><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+	s: "Nani"
+}]]]></java:args>
+		</java:invoke-static>
+		<logger level="INFO" doc:name="Logger" doc:id="413c136c-61a3-4a93-9131-a8fb62902b35" message="Got Messgae #[payload]"/>
+	</flow>
+	<flow name="helloFlow2" doc:id="990880d5-1bbd-4539-a1b2-a159677dd9d9" >
+		<http:listener doc:name="Listener" doc:id="3fe23854-905b-4bc6-86d6-1c047fb708d2" config-ref="HTTP_Listener_config" path="/data"/>
+		<ee:transform doc:name="Transform Message" doc:id="875a0137-248f-4f5c-994d-bcf897213b89" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+	"Hi " ++ payload.name ++" Welcome to " ++ payload.org
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

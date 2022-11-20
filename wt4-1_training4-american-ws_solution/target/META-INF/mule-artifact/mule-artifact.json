@@ -1,0 +1,31 @@
+{
+  "configs": [
+    "implementation.xml",
+    "training4-american-ws.xml",
+    "american-flights-api.xml"
+  ],
+  "secureProperties": [],
+  "redeploymentEnabled": true,
+  "name": "com.mycompany:wt4-1_training4-american-ws_solution:1.0.0-SNAPSHOT",
+  "minMuleVersion": "4.3.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [],
+      "exportedResources": [
+        "american-flights-api.xml",
+        "application-types.xml",
+        "examples/american-flights-example-1.json",
+        "examples/american-flights-example.json",
+        "implementation.xml",
+        "log4j2.xml",
+        "training4-american-ws.xml"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

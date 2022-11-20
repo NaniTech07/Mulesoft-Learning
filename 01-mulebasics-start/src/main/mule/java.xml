@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:java="http://www.mulesoft.org/schema/mule/java" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="db43f94f-8eb9-43bf-a188-877dc4b3a75b" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="javaFlow1" doc:id="fc9100b5-0992-416b-b6ab-9710b7eed73c" >
+		<http:listener doc:name="Listener" doc:id="580fbfd7-2bc9-42ac-916e-5de8e4501aad" config-ref="HTTP_Listener_config" path="/getstok"/>
+		<java:new constructor="StockQuoteService()" doc:name="New" doc:id="7ed66824-b390-4043-b614-b2a0f30ec3ee" class="com.way2learnonline.StockQuoteService" target="pyld"/>
+		<java:invoke doc:name="Invoke" doc:id="3f3d1ff5-a9b3-487c-9953-1a62fc35b9fc" instance="#[vars.pyld]" class="com.way2learnonline.StockQuoteService" method="getStockPrice(java.lang.String)">
+			<java:args ><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+	stockSymbol: attributes.queryParams.stock as String
+}]]]></java:args>
+		</java:invoke>
+		<logger level="INFO" doc:name="Logger" doc:id="13dbe209-a2dc-4951-be14-d3eebf92773f" message="#[payload]"/>
+	</flow>
+	<flow name="javaFlow" doc:id="c0773fd7-bd25-4b6e-9b01-13c3818c6510" >
+		<http:listener doc:name="Listener" doc:id="6af61c98-3de7-4e67-91c5-00e97cb18915" config-ref="HTTP_Listener_config" path="/get"/>
+		<java:invoke-static doc:name="Invoke static" doc:id="9a02325b-5712-42f8-9b0b-262bb57ceec4" class="com.way2learnonline.StockQuoteService" method="sayHello(java.lang.String,java.lang.String)">
+			<java:args ><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+	name: attributes.queryParams.name as String,
+	city: attributes.queryParams.city as String
+}]]]></java:args>
+		</java:invoke-static>
+		<set-payload value="#[payload as String]" doc:name="Set Payload" doc:id="6faad53e-6a0c-447c-ab84-29c968977c69" mimeType="text/plain"/>
+		<logger level="INFO" doc:name="Logger" doc:id="82a8fcd6-8a9a-4bd7-ad5c-4bb813e87cb5" message="#[payload]"/>
+	</flow>
+</mule>

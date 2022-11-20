@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:slack="http://www.mulesoft.org/schema/mule/slack" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="6953a259-b189-4448-83da-a581d6410a39" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="4aec328f-3ba9-4272-b7aa-1af44e33a919" >
+		<db:my-sql-connection host="127.0.0.1" port="3307" user="root" password="root" database="mule" />
+	</db:config>
+	<slack:config name="Slack_Config" doc:name="Slack Config" doc:id="893e2441-43cb-4559-8d7b-b3a0ad1c6b7b" unfurlMedia="false" attachments="" iconEmoji="" unfurlLinks="false" replyBroadcast="false" blocks="" channel="" threadTimeStamp="" errorMappings="" parse="NONE" message="" target="" config-ref="" targetValue="#[payload]" linkNames="false" iconUrl="" asUser="false" username="" >
+		<slack:oauth-connection >
+			<slack:oauth-authorization-code consumerKey="2915173380.4317875119409" consumerSecret="d18f00948f22d524e7382dbf72c09aa0" before="american-flights-api-console" after="american-flights-api-console" />
+			<slack:oauth-callback-config listenerConfig="HTTP_Listener_config" callbackPath="/" authorizePath="/" externalCallbackUrl="/" />
+		</slack:oauth-connection>
+	</slack:config>
+	<flow name="getFlights" doc:id="70113d98-c501-4938-89b6-811d7fc5f8ab" >
+		<http:listener doc:name="Listener" doc:id="fd808dcc-d259-4646-b2be-6b31a02060bc" config-ref="HTTP_Listener_config" path="/flights"/>
+		<db:select doc:name="Select" doc:id="24a84a37-2195-4bd5-8d0d-be3e77bd6324" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from american;]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="3581fae0-c403-4297-bb55-c36b7d09d912" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.FlightId default 0,
+	code: payload01.Airline default "",
+	origin: payload01.SourceCity default "",
+	destination: payload01.Destination default ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	
+</flow>
+	<flow name="training4-american-wsFlow" doc:id="aa2634b8-7176-46b6-b289-808f2291d1d0" >
+		<http:listener doc:name="Listener" doc:id="ad876489-5d41-4785-97fa-7285211a7e47" config-ref="HTTP_Listener_config" path="/hello"/>
+		<logger level="INFO" doc:name="Logger" doc:id="af30ff97-e11d-43d0-9d09-10f4fff8e115" />
+	</flow>
+	<flow name="training4-american-wsFlowgetbyID" doc:id="af7262d3-3e29-40d3-94a0-bda68d29c28d" >
+		<http:listener doc:name="Listener" doc:id="70299269-60a6-4601-8a03-92fd81cab9db" config-ref="HTTP_Listener_config" path="/flights/{ID}" />
+		<db:select doc:name="Select by ID" doc:id="8fa7acf0-81fb-474e-a77f-283e673a1342" config-ref="Database_Config" >
+			<db:sql ><![CDATA[select * from american where FlightId=:ID;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{ID:attributes.uriParams.ID
+	
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="d19f5169-a52e-40a5-9173-03f848f9a1a2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.FlightId default 0,
+	code: payload01.Airline default "",
+	origin: payload01.SourceCity default "",
+	destination: payload01.Destination default ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="training4-american-wsFlow1" doc:id="fd6ac4c6-59b8-4a22-abdb-90845038fafc" >
+		<http:listener doc:name="Listener" doc:id="28810b21-94a3-42c8-98b9-d4220981b19a" config-ref="HTTP_Listener_config" path="/flights" allowedMethods="POST"/>
+		<set-payload value="Flight added but not really" doc:name="Set Payload" doc:id="1773f743-f6de-4c48-bd32-66b473970902" />
+	</flow>
+
+</mule>
