@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5e520434-8657-4d33-882c-519c6c3a600a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="5e4cf235-e015-48c9-82c2-09930aa0ba77" >
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<sub-flow name="privateFlow" doc:id="4d5847f9-67b5-411a-92d5-95dc07e6039f" >
+		<http:request method="GET" doc:name="Request" doc:id="71820022-98be-4e2e-bbfb-9928aa7f4496" config-ref="HTTP_Request_configuration" path="/gudbye">
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	"Name" : attributes.queryParams.fname
+}]]]></http:query-params>
+		</http:request>
+	</sub-flow>
+	<flow name="apdev-examplesFlow" doc:id="0e3367ab-7270-4132-8ed0-326e29f5d1b5" >
+		<http:listener doc:name="helloFlow" doc:id="47928214-f8b1-47da-b938-449cdac0d8bc" config-ref="HTTP_Listener_config" path="/hello" allowedMethods="GET">
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Name" : "Vasireddy"
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<flow-ref doc:name="Sub Flow" doc:id="7706c13d-f4b5-47c0-a1e5-6dabc21eb8d8" name="apdev-examplesSub_Flow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="bc1637d7-c93c-4cd7-8a19-256d8cd2f1bf" name="privateFlow" />
+		<logger level="INFO" doc:name="Logger" doc:id="45127949-9b50-4cc3-ab8f-4d996a4ae3cf"/>
+	</flow>
+	<sub-flow name="apdev-examplesSub_Flow" doc:id="e6087d86-44e9-4f32-ab9d-a5a26507f6ec" >
+		<set-payload value="#[upper('Hello')]" doc:name="Hello" doc:id="823cbdbf-f677-4b23-91d1-e56c77f74923" />
+	</sub-flow>
+	<flow name="apdev-examplesFlow1" doc:id="9d8fa8a0-1c16-4e4e-b483-d7d6c57e6870" >
+		<http:listener doc:name="Listener" doc:id="decbd637-60a4-40ab-981b-46e3a3a87a58" config-ref="HTTP_Listener_config" path="/gudbye">
+		</http:listener>
+		<set-payload value="#[attributes.queryParams.Name]" doc:name="Gudbye" doc:id="b7b8efd6-9623-4107-bec7-26cc84487ccc" />
+		<logger level="INFO" doc:name="Logger" doc:id="8c8949d6-6bf9-4716-9eda-a004eac5b040" message="#[attributes.queryParams.Name]"/>
+	</flow>
+</mule>

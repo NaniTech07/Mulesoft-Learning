@@ -14,7 +14,7 @@ output application/json
 ---
 payload map (value,index) ->{
 	Name: value.real_name,
-	UserId : value.name,
+	UserId :value.name,
 	Id: value.id
 }]]></ee:set-payload>
 			</ee:message>

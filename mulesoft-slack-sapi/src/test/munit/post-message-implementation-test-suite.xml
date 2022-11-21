@@ -22,9 +22,6 @@
 			</munit-tools:mock-when>
 		</munit:behavior>
 		<munit:execution >
-			<munit:set-event doc:name="Set Event" doc:id="834f4b6a-6600-42b2-8339-f8351585248d" >
-				<munit:payload value="#[MunitTools::getResourceAsString('mocks/messagerequest.json')]" encoding="UTF-8" mediaType="application/json" />
-			</munit:set-event>
 			<flow-ref doc:name="Flow-ref to post-message-implementationFlow_SuccessCase" doc:id="f35b2274-7266-4624-935e-fcf7c99f6f4b" name="post-message-implementationFlow"/>
 		</munit:execution>
 		<munit:validation >
