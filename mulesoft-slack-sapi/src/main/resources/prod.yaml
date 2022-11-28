@@ -1,0 +1,12 @@
+api:
+  id: "18321741"
+
+slack:
+  id: "18321741"
+  clientId: "2915173380.4317875119409"
+  clientSecret: "d18f00948f22d524e7382dbf72c09aa0"
+  scopes: "users:read chat:write channels:read"
+  callback: "/callback"
+  authorize: "/authorize"
+  callbackUrl: "https://127.0.0.1:8081/callback"
+  

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="097064b8-e4c5-4ba8-b0bb-6b50d0852731" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="cloudhubFlow" doc:id="a078704f-653c-4dd6-b29f-2899b1e2e90e" >
+		<http:listener doc:name="Listener" doc:id="25462804-b376-49eb-b574-dd3862c05e96" config-ref="HTTP_Listener_config" path="/hello"/>
+		<ee:transform doc:name="Transform Message" doc:id="8dccd362-b70c-4022-93d5-c346b83a6c74" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"I am doing good in cloudhub 2.0"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

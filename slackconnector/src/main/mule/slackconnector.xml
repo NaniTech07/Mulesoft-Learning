@@ -33,13 +33,12 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	</flow>
 	<flow name="slackconnectorFlow1" doc:id="f1439d3e-f7cc-4934-a6ef-4deb22d60dbc" >
 		<http:listener doc:name="Listener" doc:id="9d6ee0c8-1a92-4dfd-912b-ff70485b8e74" config-ref="HTTP_Listener_config" path="/users"/>
-		<slack:get-userslist doc:name="Users list" doc:id="86198f40-eb9a-4c54-9971-750d57541a54" config-ref="Slack_Connector_Config"/>
 		<ee:transform doc:name="Transform Message" doc:id="0badf2a2-38ba-4cc7-b2d1-6d8f781fef57" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
+"I am doing good here for users end point"]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>

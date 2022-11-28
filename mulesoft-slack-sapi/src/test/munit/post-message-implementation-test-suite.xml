@@ -34,6 +34,32 @@
 			<munit-tools:assert-equals doc:name="Assert equals" doc:id="03b0d3bb-15b3-4cbf-a8e5-380df3053faf" actual="#[payload]" expected='#[{&#10;  "okay":true&#10;}]'/>
 		</munit:validation>
 	</munit:test>
+	<munit:test name="Copy_of_post-message-implementation-test-suite-post-message-implementationFlowTest" doc:id="1977647d-40e2-4d4d-90ab-5f35c2de1663" description="Test" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Failure_Slack post message" doc:id="1eb7a189-b0fa-469f-8bc1-f243b7322fda" processor="slack:create-chatpost-message" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Send Message" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2164bdff-a894-4952-af6a-ba6ffcff93f5" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Slack_Connector_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mocks/postmessage.json')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:error typeId="SLACK:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Copy_of_Flow-ref to post-message-implementationFlow_SuccessCase" doc:id="611a6875-4ab2-40c2-ad28-87bb5018f2a9" name="post-message-implementationFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Copy_of_Verify call" doc:id="e62ea2e3-8c24-4b6f-9392-1888b3a561d8" processor="ee:transform" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Transform Message" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="5e90473d-c336-4ac6-8a26-53a89656fcfb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
 
 
 </mule>
