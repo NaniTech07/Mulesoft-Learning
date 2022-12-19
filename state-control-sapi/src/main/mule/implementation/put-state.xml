@@ -16,12 +16,7 @@
 		</choice>
 	</flow>
 	<flow name="put-stateFlow1" doc:id="5b574307-041a-40be-8a33-7665160adf06" >
-		<set-variable value='#[output application/java
----
-((payload.currentStatus=="locked" and vars.storeStatus=="waiting") 
-	or (payload.currentStatus=="waiting" and vars.storeStatus=="started")
-	or(payload.currentStatus=="started" and vars.storeStatus=="locked")
-)]' doc:name="isValidationPassed" doc:id="be10b581-6437-43a4-b2da-46ae0b3a47ff" variableName="isValidationPassed"/>
+		<set-variable value='#[output application/java&#10;---&#10;((payload.currentStatus=="started" and vars.storeStatus=="waiting") &#10;	or (payload.currentStatus=="locked" and vars.storeStatus=="started")&#10;	or(payload.currentStatus=="waiting" and vars.storeStatus=="locked")&#10;)]' doc:name="isValidationPassed" doc:id="be10b581-6437-43a4-b2da-46ae0b3a47ff" variableName="isValidationPassed"/>
 		<choice doc:name="Choice" doc:id="7b3f7571-b71b-4a93-9f6f-09e6f4e16c72" >
 			<when expression='#[vars.isValidationPassed]'>
 				<flow-ref doc:name="Flow Reference" doc:id="33d2c74e-6a25-4e61-966c-71a0aff4a6b4" name="utils-store-flow" target="storeStatus"/>
