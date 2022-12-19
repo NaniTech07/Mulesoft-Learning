@@ -1,0 +1,13 @@
+#%RAML 1.0 DataType
+properties:
+  currentStatus:
+    type: string
+    enum:
+      - started
+      - locked
+      - waiting
+    example: waiting
+  
+  message:
+    type: string
+    required: false

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	    <http:request-config name="HTTPS_dummy_text" doc:name="HTTP Request configuration" doc:id="637c20dc-491d-4534-8e5e-d271a2d4df6f">
+		<http:request-connection host="anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/d62c7af1-de8e-416d-aad4-3f7b5916496e/openlogix-slackplublisher-lakshman/1.0.1/m" protocol="HTTPS">
+			<tls:context >
+				<tls:trust-store insecure="true" />
+				<tls:key-store type="jks" path="mule.jks" keyPassword="password" password="password" />
+			</tls:context>
+		</http:request-connection>
+	</http:request-config>
+	<flow name="slack-publisher1" doc:id="50ef8d41-f910-4125-b3a2-c80d123fcf47" >
+		<http:request method="POST" doc:name="Slack-Sapi" doc:id="94c8151d-369b-4157-8788-3266129b6eee" path="/message" config-ref="Slack-Request">
+			<http:body ><![CDATA[{
+  "text": "Using Papi, Posting messages, stop API please",
+  "channel": "U046DD1DBC1"
+}]]></http:body>
+			<http:headers ><![CDATA[#[output application/json
+---
+{
+	"clientSecret" : "${slack.clientSecret}",
+	"clientId" : "${slack.clientId}",
+	"scope" : "${slack.scopes}",
+	"Content-Type":"application/json"
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="2ab95e6c-f353-4f71-bae4-e292bbf7c677" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="slackpublisherFlow" doc:id="9cffbd8b-14b4-43ee-b978-a0aeb600bd70" >
+		<http:listener doc:name="Listener" doc:id="551ea157-6a00-4558-bd5a-1ed74f860fa7" config-ref="openlogix-papi-lakshman-httpListenerConfig" path="/state"/>
+		<http:request method="GET" doc:name="State" doc:id="df094712-a1a6-440a-890a-611713673776" outputMimeType="application/json" url="https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/d62c7af1-de8e-416d-aad4-3f7b5916496e/openlogix-statecontrol-sapi/1.0.0/m/state">
+			<http:headers ><![CDATA[#[output application/json
+---
+{
+	clientId : "Test",
+	clientSecret : "Value"
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="e1bb2acc-97b4-4765-ad10-6bf2c35f6be6" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="514a332e-51e0-4649-93a0-1901bacaeaa8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="651fe86b-afad-484c-b7b6-f430bb2c07c7" >
+			<when expression='#[payload.currentStatus=="waiting"]'>
+				<ee:transform doc:name="Transform Message" doc:id="dd39b0c5-d3b5-4d19-89ed-9c8d0fa7f7f2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"I am Ready to trigger"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<flow-ref doc:name="Slack Publisher" doc:id="6428a8e3-f0e9-448c-95c5-6bdf498d00a5" name="slack-publisher1"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="422ed736-6256-41b1-9b32-794952e43daa" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"System is not ready , Kindly try after some time"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="DummyTextFlow" doc:id="27fe1168-eb7d-4d80-917a-b8d4ee7a00c2" >
+		<http:listener doc:name="Listener" doc:id="977796ab-d08f-43f7-9d1a-7691c4c7c40d" config-ref="openlogix-papi-lakshman-httpListenerConfig" path="/dummy"/>
+		<http:request method="GET" doc:name="Dummy-API" doc:id="d4233c2a-5242-4bd4-8cf6-dfc1631e9f20" sendCorrelationId="NEVER" url="https://anypoint.mulesoft.com/mocking/api/v1/sources/vcs/projects/39170026-78ee-48be-bacf-520516b5da9b/master/m/dummy-text?limit=10">
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="c944dbee-bf87-4d8d-b914-95f260d8e91c">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	
+	
+</mule>

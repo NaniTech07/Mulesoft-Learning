@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="get-state-test-suite.xml" />
+	<munit:test name="get-state-test-suite-get-stateFlowTest" doc:id="5d9ca99c-4136-487a-8ee3-86d628eeffd7" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="10015421-f991-4e3c-998b-ad5f588a619b" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="utils-retrieve-flow" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="734e2e39-5bb2-485e-aec4-bf5b8cb37ca9" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="utils-retrieve-flow" attributeName="name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getresourceAsString('mocks/retrieve.json')]" mediaType="application/json" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get-stateFlow" doc:id="69947326-b8b8-4593-a5b1-07342111a77d" name="get-stateFlow"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

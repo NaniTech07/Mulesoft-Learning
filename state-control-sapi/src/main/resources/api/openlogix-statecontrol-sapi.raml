@@ -1,0 +1,40 @@
+#%RAML 1.0
+title: Openlogix-StateControl-Sapi
+description: This API keeps tracking my application
+protocols: [HTTP, HTTPS]
+mediaType: [application/json]
+securedBy: CommonLib.ClientCredentials
+version: 1.0.0
+
+uses:
+  CommonLib: exchange_modules/d62c7af1-de8e-416d-aad4-3f7b5916496e/common-lib/1.0.1/traininglibrary.raml
+
+types:
+  CurrentStatus: !include dataTypes/currentStatus.raml
+
+/health:
+  type:
+    CommonLib.HealthEndpoint:
+      getResponseType: Health
+
+
+/state:
+  get:
+  put:
+  type:
+    CommonLib.Endpoint:
+      # get
+      getResponseType: CurrentStatus
+      getResponseExample: 
+      
+       # put
+      putRequestType: CurrentStatus
+      putRequestExample: !include examples/request.json
+      putResponseType: 
+      putResponseExample: !include examples/response.json
+
+      
+
+
+
+

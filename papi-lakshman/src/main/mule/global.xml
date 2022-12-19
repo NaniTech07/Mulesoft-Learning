@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<http:listener-config name="openlogix-papi-lakshman-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8083" />
+    </http:listener-config>
+     <http:request-config name="Slack-Request" doc:name="HTTP Request configuration" doc:id="675e324a-9fc6-4611-bc14-d75d359f3d17" basePath="${slack.baseUrl}" >
+		<http:request-connection host="${slack.host}" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="e1163e8d-b00d-4ab1-884f-f7b29515f047" file="prod.yaml" />
+    
+</mule>

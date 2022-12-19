@@ -135,30 +135,9 @@ output application/json
     <flow name="slack-publisher" doc:id="2d4d5f29-274c-427e-b147-deb944e56795" >
 		<scheduler doc:name="Slack-Papi" doc:id="4169177e-5d45-45ba-bfc5-78f813d71ebb" >
 			<scheduling-strategy >
-				<fixed-frequency frequency="15" timeUnit="SECONDS" />
+				<fixed-frequency frequency="30" timeUnit="MINUTES" />
 			</scheduling-strategy>
 		</scheduler>
-		<http:request method="POST" doc:name="Slack-Sapi" doc:id="ea1b9e7e-c251-4cf1-924c-af0f3a839286" path="/message" config-ref="HTTP_Request_configuration">
-			<http:body ><![CDATA[{
-  "text": "Using Papi, Posting messages",
-  "channel": "U046DD1DBC1"
-}]]></http:body>
-			<http:headers ><![CDATA[#[output application/json
----
-{
-	"clientSecret" : "${slack.clientSecret}",
-	"clientId" : "${slack.clientId}",
-	"scope" : "${slack.scopes}",
-	"Content-Type":"application/json"
-}]]]></http:headers>
-		</http:request>
-		<ee:transform doc:name="Transform Message" doc:id="3f8a1045-2a32-4abe-b9f0-34f0a88f0869" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="05a5f281-b925-4df2-8de5-fd00cb8005a1" name="slack-publisher1"/>
 	</flow>
 </mule>

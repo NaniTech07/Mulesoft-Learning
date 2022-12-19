@@ -1,0 +1,14 @@
+slack:
+  clientId: "14a8ac11d11c4a57b7b4aa372710d910"
+  clientSecret: "2f06D7d0a0924857be933E91b8CeffdF"
+  scopes: "chat:write:user"
+  baseUrl: "/api"
+  host: "513bb6f23f1142aea8feb534c31d2694.us-e2.cloudhub.io"
+  
+  
+state:
+  url: ""
+  
+dummy:
+  url: ""
+  

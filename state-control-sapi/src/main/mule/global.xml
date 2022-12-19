@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    <apikit:config name="statecontrol-sapi-config" api="openlogix-statecontrol-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" >
+		<apikit:flow-mappings >
+			<apikit:flow-mapping resource="/state" action="get" flow-ref="get:\state:openlogix-statecontrol-sapi-config" />
+			<apikit:flow-mapping resource="/state" action="put" content-type="application/json" flow-ref="put:\state:application\json:openlogix-statecontrol-sapi-config" />
+		</apikit:flow-mappings>
+	</apikit:config>
+	<!-- <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2b92aa75-8bcb-4464-92c6-da909685836b" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>  -->    
+    
+</mule>

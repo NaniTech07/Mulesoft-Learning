@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="put-stateFlow" doc:id="a489f7a4-3a00-4197-9ce1-bfd2db2777a1" >
+		<logger level="INFO" doc:name="Logger" doc:id="0dfc09b3-8517-441f-9893-5480960cfc90" message='#["This Flow Can be triggered to store the updated values"]'/>
+		<flow-ref doc:name="utils-retrieve-flow" doc:id="c4a11de4-9fc5-4e21-bc36-0e6cdb4b1698" name="utils-retrieve-flow" target="storeStatus"/>
+		<choice doc:name="Choice" doc:id="d592772c-3fc1-4e0a-af83-8def452f7696">
+			<when expression='#[payload.currentStatus == vars.storeStatus]'>
+				<logger level="INFO" doc:name="Logger" doc:id="337ee321-5a8e-4c24-bb90-a904b3761653" message="#[payload]"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="Flow Reference" doc:id="94cc3967-bcbe-45b6-b2e0-08473401a478" name="put-stateFlow1"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="put-stateFlow1" doc:id="5b574307-041a-40be-8a33-7665160adf06" >
+		<set-variable value='#[output application/java
+---
+((payload.currentStatus=="locked" and vars.storeStatus=="waiting") 
+	or (payload.currentStatus=="waiting" and vars.storeStatus=="started")
+	or(payload.currentStatus=="started" and vars.storeStatus=="locked")
+)]' doc:name="isValidationPassed" doc:id="be10b581-6437-43a4-b2da-46ae0b3a47ff" variableName="isValidationPassed"/>
+		<choice doc:name="Choice" doc:id="7b3f7571-b71b-4a93-9f6f-09e6f4e16c72" >
+			<when expression='#[vars.isValidationPassed]'>
+				<flow-ref doc:name="Flow Reference" doc:id="33d2c74e-6a25-4e61-966c-71a0aff4a6b4" name="utils-store-flow" target="storeStatus"/>
+			</when>
+			<otherwise >
+				<raise-error doc:name="Raise error" doc:id="b66d6741-a99d-4323-96b5-a4526b7db53b" type="INVALID:INPUT"/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

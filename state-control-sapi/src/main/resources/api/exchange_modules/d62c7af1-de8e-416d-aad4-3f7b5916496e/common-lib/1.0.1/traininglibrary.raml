@@ -1,0 +1,17 @@
+#%RAML 1.0 Library
+usage: Training Library used for building training components or APIs.
+
+resourceTypes:
+  Endpoint: !include resourceTypes/Endpoint.raml
+  HealthEndpoint: !include resourceTypes/healthEndpoint.raml
+
+traits:
+  ErrorResponses: !include traits/errorResponses.raml
+
+securitySchemes:
+  ClientCredentials: !include clientCredentials.raml
+
+types:
+  Health: !include dataTypes/health.raml
+
+  

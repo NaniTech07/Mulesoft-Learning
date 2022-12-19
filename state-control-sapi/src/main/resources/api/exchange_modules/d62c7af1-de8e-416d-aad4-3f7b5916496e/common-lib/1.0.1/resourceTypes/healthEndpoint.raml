@@ -1,0 +1,10 @@
+#%RAML 1.0 ResourceType
+is: [ErrorResponses]
+description: system health check endpoint
+get:
+  responses:
+    200:
+      description: OK
+      body:
+        type: Health
+          

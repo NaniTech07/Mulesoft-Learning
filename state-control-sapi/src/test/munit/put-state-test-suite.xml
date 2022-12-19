@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="put-state-test-suite.xml" />
+	<munit:test name="put-state-test-suite-put-stateFlowTest" doc:id="85b6757e-4dba-4e28-911e-5c1ec20ac897" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to put-stateFlow" doc:id="7e389931-1e6b-442d-bbe0-49c41d916946" name="put-stateFlow"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

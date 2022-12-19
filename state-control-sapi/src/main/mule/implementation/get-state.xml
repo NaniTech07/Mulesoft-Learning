@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<flow name="get-stateFlow" doc:id="eff1d99d-a6ce-484e-a88f-98c62a50b8b3" >
+		<logger level="INFO" doc:name="Logger" doc:id="c9e8269a-4ff3-46f5-a457-ad798f6df5af" message='#["The current Status of the flow can be retrieved in this flow"]'/>
+		<flow-ref doc:name="utils-retrieve-flow" doc:id="734e2e39-5bb2-485e-aec4-bf5b8cb37ca9" name="utils-retrieve-flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="1b721ac2-a5a8-4ea5-87d2-fa37c7206c12" message='#["currentStatus is " ++ payload]'/>
+	</flow>
+</mule>
