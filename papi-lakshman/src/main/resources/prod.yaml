@@ -7,7 +7,7 @@ slack:
   
   
 state:
-  url: ""
+  url: "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/d62c7af1-de8e-416d-aad4-3f7b5916496e/openlogix-statecontrol-sapi/1.0.0/m/state"
   
 dummy:
   url: ""
