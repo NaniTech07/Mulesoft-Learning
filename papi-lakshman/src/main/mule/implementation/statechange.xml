@@ -18,6 +18,14 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	"clientId" : "${state.clientId}"
 }]]]></http:headers>
 		</http:request>
+		<http:request method="GET" doc:name="Dummy Text" doc:id="af1429dd-39e3-42d7-acc0-80d66a1734fb" url="${dummy.url}">
+			<http:headers ><![CDATA[#[output application/json
+---
+{
+	"clientSecret" : "${dummy.clientSecret}",
+	"clientId" : "${dummy.clientId}"
+}]]]></http:headers>
+		</http:request>
 		<ee:transform doc:name="Transform Message" doc:id="5edfd321-1eb2-45bd-8d60-bdb01c4c3925" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0

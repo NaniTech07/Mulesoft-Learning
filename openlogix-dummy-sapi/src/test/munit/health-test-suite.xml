@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="health-test-suite.xml" />
+	<munit:test name="health-test-suite-healthFlowTest" doc:id="e0bfd19c-000f-4e97-b2e4-a9408ab69472" description="Test" expectedErrorType="health-test-suite-healthFlowTest">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="7016a972-6026-49ef-98e1-c5d681cdd7bc" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Logger" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="a35ffe1f-eeea-4727-8c4b-7cebcb44f69b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="c2259bfc-f687-471b-a89c-313c59368496" />
+			<flow-ref doc:name="Flow-ref to healthFlow" doc:id="f6592ba2-f54d-45fb-b1d6-afd422e5494a" name="healthFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="da52b889-9dac-4bcf-8734-63685d73c257" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Logger" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

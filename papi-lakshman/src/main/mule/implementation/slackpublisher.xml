@@ -41,7 +41,11 @@ payload]]></ee:set-payload>
 		</ee:transform>
 	</flow>
 	<flow name="slackpublisherFlow" doc:id="0ce5faab-ba15-4aa4-9303-248291e4c652" >
-		<http:listener doc:name="Listener" doc:id="671c62fc-c3d0-4eec-84fd-3857c568f8a4" config-ref="openlogix-papi-lakshman-httpListenerConfig" path="/state"/>
+		<scheduler doc:name="PAPI" doc:id="0db40312-0aaa-427e-92d7-013e85fca96c" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="5" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
 		<http:request method="GET" doc:name="State" doc:id="fc1fd3c7-b9c5-4862-b4cd-4ebf2be0f530" outputMimeType="application/json" url="${state.url}">
 			<http:headers ><![CDATA[#[output application/json
 ---

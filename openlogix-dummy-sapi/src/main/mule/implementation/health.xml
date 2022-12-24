@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="healthFlow" doc:id="b1a8cccb-c0f3-47a3-9479-bd11f1a64eab" >
+		<logger level="INFO" doc:name="Logger" doc:id="a35ffe1f-eeea-4727-8c4b-7cebcb44f69b" message="health log triggered"/>
+	</flow>
+</mule>

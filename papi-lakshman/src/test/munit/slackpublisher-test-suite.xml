@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="slackpublisher-test-suite.xml" />
+	<munit:test name="SAPI-SUCCESS" doc:id="ef7d5133-80a3-4b04-b4e0-74edef63a76e" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Get State" doc:id="614b5e3d-a465-4a6c-8a7a-77d2c35f9bb6" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="State" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="fc1fd3c7-b9c5-4862-b4cd-4ebf2be0f530" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "waiting"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Started" doc:id="3a98c25b-e51e-422d-9ebd-13fb4185b254" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PUT" attributeName="method" />
+					<munit-tools:with-attribute whereValue="State Started" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="ac83d9ea-d694-4eb7-8c73-6fff885f9fe4" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="${state.url}" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "started"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Locked" doc:id="2dfdacba-f2bf-4049-97a2-4378fc1439d8" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PUT" attributeName="method" />
+					<munit-tools:with-attribute whereValue="State Locked" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="6a600c54-add7-4152-8dbc-66a4484fd992" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="${state.url}" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "locked"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Dummy Text" doc:id="6688e450-2375-4f61-97a8-9f2d8172b057" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Dummy Text" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="af1429dd-39e3-42d7-acc0-80d66a1734fb" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="${dummy.url}" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "waiting"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Slack Publisher" doc:id="802f518e-2b8a-447f-bb82-0269c1a37830" processor="http:request">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Slack-Sapi" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="21455949-2189-49cc-a5c4-6b00b5cf2397" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="/message" attributeName="path" />
+					<munit-tools:with-attribute whereValue="Slack-Request" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;    "status": "Created"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Waiting" doc:id="97f78258-fba0-4d1b-8fc5-fc37e0144524" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PUT" attributeName="method" />
+					<munit-tools:with-attribute whereValue="State Waiting" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="8599ddfd-38e5-4d9e-a7eb-7e24a6c82d22" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="${state.url}" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "waiting"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to slackpublisherFlow" doc:id="80fb2e06-ee3d-41d2-b7ea-4013192666a9" name="slackpublisherFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="9725d720-2df8-42c8-aa18-3bff7d373d85" is="#[MunitTools::notNullValue()]" expression='#[payload.currentStatus=="waiting"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SAPI-FAILURE" doc:id="cc8bd191-7e3c-458f-9e99-957c40dbbf4e" description="Test" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Get State" doc:id="e71dfb8f-5822-47da-ad8d-db9cd81df0bd" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="State" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="fc1fd3c7-b9c5-4862-b4cd-4ebf2be0f530" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "waiting"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Started" doc:id="7bd733cb-7010-43fe-bf42-f4b465183a24" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PUT" attributeName="method" />
+					<munit-tools:with-attribute whereValue="State Started" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="ac83d9ea-d694-4eb7-8c73-6fff885f9fe4" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="${state.url}" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "started"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Locked" doc:id="d9921788-ee2f-4960-9c68-3c023a9ae69c" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PUT" attributeName="method" />
+					<munit-tools:with-attribute whereValue="State Locked" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="6a600c54-add7-4152-8dbc-66a4484fd992" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="${state.url}" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "locked"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Dummy Text" doc:id="002eeb76-5271-4b22-a90c-c37c5abae0c4" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Dummy Text" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="af1429dd-39e3-42d7-acc0-80d66a1734fb" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="${dummy.url}" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "waiting"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Slack Publisher" doc:id="4393ef1e-022e-40c8-97c4-e78a7155ba2e" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Slack-Sapi" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="21455949-2189-49cc-a5c4-6b00b5cf2397" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="/message" attributeName="path" />
+					<munit-tools:with-attribute whereValue="Slack-Request" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;    "status": "Created"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Waiting" doc:id="10ff1754-6816-471c-b9d8-e09cc8856785" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PUT" attributeName="method" />
+					<munit-tools:with-attribute whereValue="State Waiting" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="8599ddfd-38e5-4d9e-a7eb-7e24a6c82d22" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="${state.url}" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;  "message" : "Change the status of the application",&#10;  "currentStatus" : "Locked"&#10;}]' mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to slackpublisherFlow" doc:id="fd720800-9079-4ec4-af94-658da57f7f79" name="slackpublisherFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="74629c25-c958-41c6-ad1c-e56fe36cda90" expression='#[payload.currentStatus!=="waiting"]' is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

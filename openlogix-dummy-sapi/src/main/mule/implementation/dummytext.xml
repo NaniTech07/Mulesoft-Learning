@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="dummytextFlow" doc:id="a9c99cfa-2587-4b38-b15d-f1f0986d2fc5" >
+		<ee:transform doc:name="Transform Message" doc:id="09dad3cb-d50d-4261-81e8-64b9f51195f2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="GET" doc:name="Request" doc:id="5486920a-1f81-40c8-8511-79ce279347a3" url="https://baconipsum.com/api/?paras=5&amp;type=all-meat&amp;start-with-lorem=1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d306380e-b016-4666-b2b9-621c83012c43" message="dummy text log triggered"/>
+	</flow>
+</mule>

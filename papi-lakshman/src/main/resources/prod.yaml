@@ -7,8 +7,12 @@ slack:
   
   
 state:
-  url: "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/d62c7af1-de8e-416d-aad4-3f7b5916496e/openlogix-statecontrol-sapi/1.0.0/m/state"
+  url: "http://localhost:8081/api/state"
+  clientId: "14a8ac11d11c4a57b7b4aa372710d910"
+  clientSecret: "2f06D7d0a0924857be933E91b8CeffdF"
   
 dummy:
-  url: ""
+  url: "http://localhost:8084/api/dummy-text"
+  clientId: "14a8ac11d11c4a57b7b4aa372710d910"
+  clientSecret: "2f06D7d0a0924857be933E91b8CeffdF"
   
